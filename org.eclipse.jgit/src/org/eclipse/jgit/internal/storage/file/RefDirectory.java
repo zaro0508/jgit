@@ -197,10 +197,10 @@ public class RefDirectory extends RefDatabase {
 
 	@Override
 	public void close() {
-		// We have no resources to close.
+		clearReferences();
 	}
 
-	void rescan() {
+	private void clearReferences() {
 		looseRefs.set(RefList.<LooseRef> emptyList());
 		packedRefs.set(PackedRefList.NO_PACKED_REFS);
 	}
@@ -208,7 +208,7 @@ public class RefDirectory extends RefDatabase {
 	@Override
 	public void refresh() {
 		super.refresh();
-		rescan();
+		clearReferences();
 	}
 
 	@Override
