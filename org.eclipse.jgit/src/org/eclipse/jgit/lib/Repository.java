@@ -63,6 +63,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
 import org.eclipse.jgit.dircache.DirCache;
 import org.eclipse.jgit.errors.AmbiguousObjectException;
@@ -109,6 +110,8 @@ public abstract class Repository implements AutoCloseable {
 
 	/** Use counter */
 	final AtomicInteger useCnt = new AtomicInteger(1);
+
+	final AtomicLong closedAt = new AtomicLong();
 
 	/** Metadata directory holding the repository's critical files. */
 	private final File gitDir;
@@ -813,8 +816,11 @@ public abstract class Repository implements AutoCloseable {
 	/** Decrement the use count, and maybe close resources. */
 	public void close() {
 		if (useCnt.decrementAndGet() == 0) {
-			doClose();
-			RepositoryCache.unregister(this);
+			if (RepositoryCache.isCached(this)) {
+				closedAt.set(System.currentTimeMillis());
+			} else {
+				doClose();
+			}
 		}
 	}
 
