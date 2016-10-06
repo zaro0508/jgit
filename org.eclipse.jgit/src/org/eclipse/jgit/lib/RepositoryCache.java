@@ -56,7 +56,6 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import org.eclipse.jgit.annotations.NonNull;
 import org.eclipse.jgit.errors.RepositoryNotFoundException;
 import org.eclipse.jgit.internal.storage.file.FileRepository;
 import org.eclipse.jgit.util.FS;
@@ -147,7 +146,7 @@ public class RepositoryCache {
 	 * @param db
 	 *            repository to unregister.
 	 */
-	public static void close(@NonNull final Repository db) {
+	public static void close(final Repository db) {
 		if (db.getDirectory() != null) {
 			FileKey key = FileKey.exact(db.getDirectory(), db.getFS());
 			cache.unregisterAndCloseRepository(key, db);
@@ -196,7 +195,7 @@ public class RepositoryCache {
 		return cache.getKeys();
 	}
 
-	static boolean isCached(@NonNull Repository repo) {
+	static boolean isCached(Repository repo) {
 		File gitDir = repo.getDirectory();
 		if (gitDir == null) {
 			return false;
